@@ -1,25 +1,37 @@
-import "./App.css";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "./layout/Navbar";
-import Home from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AddUser from "./users/AddUser";
-import EditUser from "./users/EditUser";
-import ViewUser from "./users/ViewUser";
-import Login from "./users/Login";
+import AddUser from "./Component/UserModel/Register";
+import EditUser from "./Component/UserModel/EditUser";
+import ViewUser from "./Component/UserModel/ViewUser";
+import Login from "./Component/UserModel/Login";
+import Home from "./Component/UserModel/Home";
+import Welcom from "./Component/UserModel/Welcom";
+import Products from "./Component/ProductModel/Products";
+import ProductDetails from "./Component/ProductModel/ProductDetails";
+import AddProducts from "./Component/ProductModel/AddProducts";
+import AddminLogin from "./Component/ProductModel/AdminLogin";
+import EditAdminLogin from "./Component/ProductModel/EditAdminLogin";
+import EditProducts from "./Component/ProductModel/EditProducts";
+import EditProductForm from "./Component/ProductModel/EditProductForm";
 
 function App() {
   return (
-    <div className="App">
+    <div >
       <Router>
-        <Navbar />
-
         <Routes>
-        <Route exact path="/" element={<Login />} />
-          <Route exact path="/user"user element={<Home />} />
-          <Route exact path="/adduser" element={<AddUser />} />
+          <Route exact path="/" user element={<Products />} />
+          <Route exact path="/products" user element={<Products />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/home" user element={<Home />} />
+          <Route exact path="/welcome" user element={<Welcom />} />
+          <Route exact path="/register" element={<AddUser />} />
           <Route exact path="/edituser/:id" element={<EditUser />} />
+          <Route exact path="/editproducts/:id" element={<EditProductForm />} />
           <Route exact path="/viewuser/:id" element={<ViewUser />} />
+          <Route exact path="/addminlogin" user element={<AddminLogin />} />
+          <Route exact path="/editadminlogin" user element={<EditAdminLogin />} />
+          <Route exact path="/addproducts" user element={<AddProducts />} />
+          <Route exact path="/editproducts" user element={<EditProducts />} />
+          <Route exact path="/products/:id" user element={<ProductDetails />} />
         </Routes>
       </Router>
     </div>
