@@ -3,17 +3,41 @@ import { NavLink } from 'react-router-dom';
 import '../CSS/Navbar.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import UserContext from '../Component/context/UserContext'
+import UserContext from '../Component/context/UserContext';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import Badge from '@mui/material/Badge';
 
 function Navbar() {
-    const { setUser } = useContext(UserContext)
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const { logedUser } = useContext(UserContext);
+    const { cart } = useContext(UserContext);
+
+
+    const user = logedUser ? logedUser.charAt(0).toUpperCase() + logedUser.slice(1) : '';
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
+    const { setUser } = useContext(UserContext);
     const [search, setsearch] = useState(null);
     const onInputChange = (e) => {
         const inputValue = e.target.value;
         setsearch(inputValue);
         setUser(inputValue);
-        console.log(search)
+        console.log(search);
     };
+
+
     let appname = "kharidikaro";
     return (
         <div className='nav-container'>
@@ -27,9 +51,6 @@ function Navbar() {
                             Home
                         </li>
                     </NavLink>
-                    {/* <NavLink to="/home" style={{ textDecoration: "none" }}>
-                        <li className="nav-item">Users</li>
-                    </NavLink> */}
                     <NavLink to='/products' style={{ textDecoration: 'none' }}>
                         <li className='nav-item' >
                             Products
@@ -45,11 +66,6 @@ function Navbar() {
                             Eidt/Delete Products
                         </li>
                     </NavLink>
-                    {/* <NavLink to='/login' style={{ textDecoration: 'none' }}>
-                        <li className='nav-item' >
-                            Login
-                        </li>
-                    </NavLink> */}
                     <li className='nav-item'>
                         <Box
                             component='form'
@@ -72,9 +88,52 @@ function Navbar() {
                             />
                         </Box>
                     </li>
+                    <div className='profile'>
+                        <li className='nav-item '>
+                            <NavLink to="/cart" style={{ textDecoration: 'none' }}>
+                                <Badge badgeContent={cart} color="error">
+                                    <ShoppingCartIcon sx={{ fontSize: 35 }} />
+                                </Badge>
+                            </NavLink>
+                        </li>
+                    </div>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings" style={{ top: '8px', right: "15px" }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt={user} src="/static/images/avatar/2.jpg" />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center">{user}</Typography>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <NavLink to="/login" style={{ textDecoration: 'none' }}>
+                                    <Typography textAlign="center">Logout</Typography>
+                                </NavLink>
+                            </MenuItem>
+
+                        </Menu>
+                    </Box>
                 </ul>
             </div>
         </div>
     );
 }
+
 export default Navbar;

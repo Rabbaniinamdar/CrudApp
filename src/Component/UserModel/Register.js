@@ -25,7 +25,7 @@ export default function Register() {
     e.preventDefault();
     try {
       const response=await axios.post("http://localhost:8086/user", user);
-      navigate("/");
+      navigate("/login");
       setError(response.data)
     } catch (error) {
       console.error("Server error:", error.response.data);

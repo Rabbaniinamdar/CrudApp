@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -11,12 +11,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Stack from '@mui/material/Stack';
 import Navbar from '../Navbar';
+import UserContext from '../context/UserContext';
+import Alert from '@mui/material/Alert';
+
 import '../../CSS/EditProducts.css'
 export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [alert, setAlert] = useState(false);
+
     const { id } = useParams();
+    const { cart, setCart, cartProducts, setCartProducts } = useContext(UserContext);
 
     useEffect(() => {
         async function fetchData() {
@@ -32,6 +38,24 @@ export default function ProductDetails() {
 
         fetchData();
     }, [id]);
+
+    const addToCart = () => {
+        const curCartProd = cartProducts.find((prod) => prod.id === product.id);
+        console.log(product.id)
+        console.log(curCartProd?.id)
+        console.log(cartProducts)
+
+        if (product.id && product.id !== curCartProd?.id) {
+            setCartProducts([...cartProducts, product]);
+            setCart(cart + 1);
+            setAlert(false)
+        } else {
+            setAlert(true);
+            setTimeout(() => {
+                setAlert(false);
+            }, 1000);
+        }
+    };
 
     const Img = styled('img')({
         margin: 'auto',
@@ -49,6 +73,9 @@ export default function ProductDetails() {
     return (
         <React.Fragment>
             <Navbar />
+            {alert && <Alert style={{ backgroundColor: "#FF0000", position: "fixed", top: "11%", right: "42%", zIndex: 20 }} variant="filled" severity="warning" >
+                Product Already In Cart
+            </Alert>}
             <Paper
                 sx={{
                     p: 5,
@@ -80,7 +107,7 @@ export default function ProductDetails() {
                                     </div>
                                     <div className='buttons'>
                                         <Stack direction="row" spacing={2}>
-                                            <Button variant="contained" style={{ backgroundColor: "red" }}>
+                                            <Button variant="contained" style={{ backgroundColor: "red" }} onClick={addToCart}>
                                                 <FontAwesomeIcon icon={faShoppingCart} /> <span className='editbtn_products'>Add to cart</span>
                                             </Button>
                                             <Button variant="contained" className="button">

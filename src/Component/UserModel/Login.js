@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../../CSS/Login.css'
 import Button from '@mui/material/Button';
+import UserContext from "../context/UserContext";
 
 export default function Login() {
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
+    const { setLogedUser } = useContext(UserContext);
     const [loginForm, setLoginginForm] = useState({
         username: "",
         password: ""
@@ -23,11 +25,13 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:8086/login", loginForm
-            );
+            const response = await axios.post("http://localhost:8086/login", loginForm);
 
             if (response.data === "Success") {
-                navigate("/home");
+                const loggedInUser = loginForm.username;
+                sessionStorage.setItem('loggedInUser', loggedInUser);
+                setLogedUser(loggedInUser);
+                navigate("/products");
             } else {
                 console.log("Login failed");
             }
@@ -40,6 +44,7 @@ export default function Login() {
             }
         }
     };
+
     return (
         <div>
             <div className="container">
@@ -50,10 +55,10 @@ export default function Login() {
                         name="username"
                         placeholder="Enter username"
                         onChange={onInputChange}
-                        required />
+                        required
+                    />
                     <br />
                     <br />
-
                     <input
                         type="password"
                         name="password"
@@ -66,17 +71,17 @@ export default function Login() {
                         {error && <span >{error}</span>}
                     </div>
                     <Button variant="contained" type="submit" className="btn-submit"
-                     style={{ padding: "10px", width: "90%" }}>
+                        style={{ padding: "10px", width: "90%" }}>
                         LOGIN
                     </Button>
                 </form>
                 <div className="haveaccount">
-                    <span>Don't hava an account? </span>
+                    <span>Don't have an account? </span>
                     <Link to="/register" style={{ color: "#575757" }}>
                         REGISTER
                     </Link>
                 </div>
             </div>
         </div>
-    )
+    );
 }

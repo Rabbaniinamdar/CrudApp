@@ -71,7 +71,6 @@ export default function Home() {
                         Delete
                       </Button>
                     </Stack>
-
                   </td>
                 </tr>
               ))}
